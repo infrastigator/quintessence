@@ -227,15 +227,17 @@ class Person:
 
     def name_preprocessing(self) -> None:
         # for Officers, we just have self.name
-        try:
-            self.forename = self.name.split(', ')[1].split(' ')[0]
-        except TypeError as e:
-            print(e)
-
-        try:
-            self.surname = self.name.split(', ')[0].capitalize()
-        except TypeError as e:
-            print(e)
+        if "," in self.name:
+            try:
+                self.forename = self.name.split(', ')[1].split(' ')[0]
+            except TypeError as e:
+                print(e)
+            try:
+                self.surname = self.name.split(', ')[0].capitalize()
+            except TypeError as e:
+                print(e)
+        else:
+            pass
 
     def score(self, extra_search_term: str = None):
         # 0 = lowest risk vs. 100 = highest risk
@@ -292,7 +294,8 @@ class Person:
 
         elif self.name:
             # for officers - no exact search since self.name not a typical way to refer to someone
-            input_name = self.name
+            self.name_preprocessing()
+            input_name = '"' + self.forename + " " + self.surname + '"'
 
         else:
             # Can't extract a valid input name
