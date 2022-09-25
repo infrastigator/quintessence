@@ -1,5 +1,8 @@
 {
-  "company": {},
+  "company": {
+    "officers": 0.5,
+    "pscs": 0.5
+  },
   "person": {
     "name_flag": 0.2,
     "news_mentions_flag": 0.2,

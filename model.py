@@ -141,6 +141,13 @@ class Company:
             # TODO actually just having no PSCs decreases your shadiness score
             return 0.0
 
+    def final_score(self) -> float:
+        final_score = self.summary_score['officers'] * score_weights['company']['officers'] \
+                      + self.summary_score['pscs'] * score_weights['company']['pscs']
+        self.summary_score['final_company_score'] = final_score
+
+        return final_score
+
     def directors_etc_are_just_not_here(self) -> bool:
         pass
 
@@ -566,7 +573,7 @@ class Analysis:
             self.get_api_filings_data()
 
         # 5. Store resulting aggregated JSON in local folder
-        with open(output_path + "/" + self.company.company_number + ".json", "w") as outfile:
+        with open(output_path + "/raw_data.json", "w") as outfile:
             outfile.write(self.company.to_json())
 
     # Parsing of API data
@@ -1117,20 +1124,36 @@ class Analysis:
             self.company.filings.append(filing)
 
     # Scoring Method
-    def score(self) -> int:
+    def score(self) -> None:
         # wrapper method that call the score methods in the correct order
         # and return the final score + percentile
+
+        output_directory = self.company.company_number
+        output_path = os.path.join('output/', output_directory)
+
+        # 1. Officers
+        print("Officers weighted-average score: " + str(round(self.company.officers_weighted_score(), 2)))
+
+        # 2. PSCs
+        print("PSCs weighted-average score: " + str(round(self.company.pscs_weighted_score(), 2)))
+
+        # 3. Addresses
+
+        # 4. Filings
+
+        # 5. Documents
+
         # TODO cross-cutting scoring
         #  while adding individual items (e.g. Company Name)
 
-        # Reputation / Shadyness Score
-        # TODO scoring tree based approach
-        #  - company
-        #  - individuals
-        #  - addresses
-        # percentile all this
-        # leverages a JSON or YAML file that is loaded in memory and can be adjusted by users
-        pass
+        # 6. Final Score
+        print("Final weighted-average score: " + str(round(self.company.final_score(), 2)))
+
+        # 7. Percentiles
+
+        # Store resulting aggregated JSON in local folder
+        with open(output_path + "/scores.json", "w") as outfile:
+            outfile.write(json.dumps(self.company.summary_score, indent=4))
 
     # Optional HTML reporting
     def report(self):
