@@ -298,7 +298,10 @@ class Person:
         elif self.name:
             # for officers - no exact search since self.name not a typical way to refer to someone
             self.name_preprocessing()
-            input_name = '"' + self.forename + " " + self.surname + '"'
+            if self.forename and self.surname:
+                input_name = '"' + self.forename + " " + self.surname + '"'
+            else:
+                input_name = self.name
 
         else:
             # Can't extract a valid input name
