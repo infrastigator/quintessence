@@ -660,7 +660,7 @@ class Analysis:
 
     def get_api_pscs_data(self) -> None:
         api_data = self.api_get_request('pscs')
-        if not api_data['errors']:
+        if not 'errors' in api_data:
         # if True:
 
             # Company data
@@ -680,6 +680,7 @@ class Analysis:
                 pass
 
             # PSCS
+            print(api_data)
             for item in api_data['items']:
                 psc = PersonWithSignificantControl()
 
