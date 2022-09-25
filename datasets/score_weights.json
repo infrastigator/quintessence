@@ -1,0 +1,10 @@
+{
+  "company": {},
+  "person": {
+    "name_flag": 0.2,
+    "news_mentions_flag": 0.2,
+    "nationality_flag": 0.2,
+    "residence_flag": 0.2,
+    "age_flag": 0.2
+  }
+}
