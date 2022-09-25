@@ -22,6 +22,9 @@ with open('datasets/fake_names.json') as fp:
 with open('datasets/score_weights.json') as fp:
     score_weights = json.load(fp)
 
+with open('datasets/company_types.json') as fp:
+    company_types = json.load(fp)["company_types"]
+
 # API Endpoints
 company_api = "https://api.company-information.service.gov.uk/company/"
 document_api = "https://frontend-doc-api.company-information.service.gov.uk/document/"
@@ -302,7 +305,10 @@ class Person:
             return False
 
         if extra_search_term:
-            input_name += ' ' + '"' + extra_search_term + '"'
+            if extra_search_term.split(" ")[-1].upper() in company_types:
+                input_name += ' ' + '"' + ' '.join(extra_search_term.split(" ")[0:-1]) + '"'
+            else:
+                input_name += ' ' + '"' + extra_search_term + '"'
 
         googlenews.get_news(input_name)
         for story in googlenews.results():
