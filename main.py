@@ -13,11 +13,3 @@ analysis.get_api_data()
 
 # 3. Get the scoring data
 analysis.score()
-
-# print(target_company.company_name)
-# print("\n")
-# print("Officers weighted-average score: "+str(round(target_company.officers_weighted_score(), 2)))
-# print("\n")
-# print("PSCs weighted-average score: "+str(round(target_company.pscs_weighted_score(), 2)))
-# print("\n")
-# print(json.dumps(target_company.summary_score, indent=4))
