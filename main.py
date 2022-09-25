@@ -2,21 +2,18 @@ import json
 
 from model import Company, Analysis
 
-ch_number = "06004999"
+ch_number = "04542769"
 
 target_company = Company(company_number=ch_number)
 analysis = Analysis(target_company)
+# 1. Basic get company raw data from all API endpoints
 analysis.get_api_data()
-
-# Store resulting aggregated JSON in local folder
-with open("output/"+ch_number+".json", "w") as outfile:
-    outfile.write(target_company.to_json())
-
-# TODO destination folder for binaries
+# 2. Same as 1. + download all PDF documents to local output folder - will take longer
 # analysis.get_api_data(download_binary=True)
 
-# print(target_company.to_json())
+print(target_company.to_json())
 
+# 3. Get the scoring dataw
 print(target_company.company_name)
 print("\n")
 print("Officers weighted-average score: "+str(round(target_company.officers_weighted_score(), 2)))

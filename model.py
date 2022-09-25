@@ -541,6 +541,15 @@ class Analysis:
     def get_api_data(self, download_binary: bool = False) -> None:
         # wrapper function to gather data from the various endpoints
 
+        # 0. Create local subfolder to store data
+        output_directory = self.company.company_number
+        output_path = os.path.join('output/', output_directory)
+        try:
+            os.makedirs(output_path, exist_ok=True)
+            print("Output directory '%s' created successfully" % output_directory)
+        except OSError as error:
+            print("Output directory '%s' cannot be created" % output_directory)
+
         # 1. Data from Company endpoint
         self.get_api_company_data()
 
@@ -555,6 +564,10 @@ class Analysis:
             self.get_api_filings_data(download_binary=True)
         else:
             self.get_api_filings_data()
+
+        # 5. Store resulting aggregated JSON in local folder
+        with open(output_path + "/" + self.company.company_number + ".json", "w") as outfile:
+            outfile.write(self.company.to_json())
 
     # Parsing of API data
     def get_api_company_data(self) -> None:
@@ -1084,9 +1097,15 @@ class Analysis:
 
                     # optional API call to Document Content endpoint to retrieve binary for document
                     if download_binary:
+                        output_directory = self.company.company_number
+                        output_path = os.path.join('output/', output_directory)
+
                         time.sleep(5)
                         try:
-                            document.binary = self.api_get_request('document_content', document.document_id)
+                            with open(output_path + "/" + document.document_id + ".pdf", "wb") as binary_file:
+                                pdf_document = self.api_get_request('document_content', document.document_id)
+                                binary_file.write(pdf_document)
+                                # document.binary = pdf_document
                         except (KeyError, TypeError) as e:
                             pass
 
