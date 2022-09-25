@@ -29,7 +29,18 @@ Then you'll need to create a local file to store your key. If you're on Linux or
         # and press CTRL+X to save and exit
 
 ## Usage
-* Open `Tutorial.ipynb`
+* **Note**: Open `Tutorial.ipynb` for a tour of the functionalities currently implemented.
+
+To create a folder with the raw data and the score JSON
+
+    # from the command line
+    python main.py "11004735"
+
+You can also add an optional flag to download all the PDF documents associated with this company (takes longer obviously)
+
+    # from the command line
+    python main.py "11004735" "binary"
+
 
 ## Additional Information
 ### Next Steps
