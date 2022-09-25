@@ -22,6 +22,9 @@ with open('datasets/fake_names.json') as fp:
 with open('datasets/score_weights.json') as fp:
     score_weights = json.load(fp)
 
+with open('datasets/company_types.json') as fp:
+    company_types = json.load(fp)["company_types"]
+
 # API Endpoints
 company_api = "https://api.company-information.service.gov.uk/company/"
 document_api = "https://frontend-doc-api.company-information.service.gov.uk/document/"
@@ -227,15 +230,17 @@ class Person:
 
     def name_preprocessing(self) -> None:
         # for Officers, we just have self.name
-        try:
-            self.forename = self.name.split(', ')[1].split(' ')[0]
-        except TypeError as e:
-            print(e)
-
-        try:
-            self.surname = self.name.split(', ')[0].capitalize()
-        except TypeError as e:
-            print(e)
+        if "," in self.name:
+            try:
+                self.forename = self.name.split(', ')[1].split(' ')[0]
+            except TypeError as e:
+                print(e)
+            try:
+                self.surname = self.name.split(', ')[0].capitalize()
+            except TypeError as e:
+                print(e)
+        else:
+            pass
 
     def score(self, extra_search_term: str = None):
         # 0 = lowest risk vs. 100 = highest risk
@@ -292,14 +297,18 @@ class Person:
 
         elif self.name:
             # for officers - no exact search since self.name not a typical way to refer to someone
-            input_name = self.name
+            self.name_preprocessing()
+            input_name = '"' + self.forename + " " + self.surname + '"'
 
         else:
             # Can't extract a valid input name
             return False
 
         if extra_search_term:
-            input_name += ' ' + '"' + extra_search_term + '"'
+            if extra_search_term.split(" ")[-1].upper() in company_types:
+                input_name += ' ' + '"' + ' '.join(extra_search_term.split(" ")[0:-1]) + '"'
+            else:
+                input_name += ' ' + '"' + extra_search_term + '"'
 
         googlenews.get_news(input_name)
         for story in googlenews.results():
@@ -660,7 +669,7 @@ class Analysis:
 
     def get_api_pscs_data(self) -> None:
         api_data = self.api_get_request('pscs')
-        if not api_data['errors']:
+        if not 'errors' in api_data:
         # if True:
 
             # Company data
@@ -680,6 +689,7 @@ class Analysis:
                 pass
 
             # PSCS
+            print(api_data)
             for item in api_data['items']:
                 psc = PersonWithSignificantControl()
 
