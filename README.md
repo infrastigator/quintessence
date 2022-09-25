@@ -18,7 +18,7 @@ We've built this tool for two main reasons:
 
         git clone https://github.com/infrastigator/quintessence.git
 
-3. You will need an API key from Companies House to authenticate with the API (create a live application from the developers section of their [website](https://find-and-update.company-information.service.gov.uk/)).
+3. You will need an API key from Companies House to authenticate with the API (create a live application from the developers section of their [website](https://developer.company-information.service.gov.uk/)).
 Then you'll need to create a local file to store your key. If you're on Linux or Mac, you can do the following:
 
         cd quintessence
